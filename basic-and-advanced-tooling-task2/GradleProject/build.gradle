@@ -1,0 +1,59 @@
+
+group 'GLHomework'
+version '1.0-SNAPSHOT'
+
+apply plugin:"java"
+apply plugin: "groovy"
+
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.springframework:spring-web:5.0.2.RELEASE'
+    testImplementation 'junit:junit:4.+'
+}
+
+
+class PrintToolVersionTask extends DefaultTask{
+
+    String tool
+    @TaskAction
+    void printToolVersion() {
+
+        println '************ In a custom task***************'
+        switch (tool) {
+            case 'java':
+                println 'You are using Java'
+                break
+            case 'groovy':
+                println 'You are using Groovy'
+                break
+            default:
+                throw new IllegalArgumentException("Unknown tool")
+        }
+    }
+}
+
+
+task printJavaVersion(  type : PrintToolVersionTask) {
+    tool 'java'
+}
+
+defaultTasks 'helloGradle'
+def hello = 'hello Gradle!!!'
+
+task helloGradle {
+    dependsOn 'build'
+    dependsOn 'printJavaVersion'
+    doLast {
+        println '***********In a default task*********'
+        println hello
+    }
+
+}
+
